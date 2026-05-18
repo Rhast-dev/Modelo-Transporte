@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TransportSolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">TransportSolver</span>
+    </div>
+    <nav class="steps-nav" id="steps-nav">
+      <button class="step-btn active" data-step="1" onclick="jumpTo(1)">
+        <span class="step-num">01</span><span class="step-label">Nodos</span>
+      </button>
+      <span class="step-arrow">→</span>
+      <button class="step-btn" data-step="2" onclick="jumpTo(2)">
+        <span class="step-num">02</span><span class="step-label">Flujos</span>
+      </button>
+      <span class="step-arrow">→</span>
+      <button class="step-btn" data-step="3" onclick="jumpTo(3)">
+        <span class="step-num">03</span><span class="step-label">Costos</span>
+      </button>
+      <span class="step-arrow">→</span>
+      <button class="step-btn" data-step="4" onclick="jumpTo(4)">
+        <span class="step-num">04</span><span class="step-label">Resolver</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+
+    <!-- STEP 1: NODES -->
+    <section class="step-section active" id="step-1">
+      <div class="section-header">
+        <div class="section-tag">Paso 01</div>
+        <h2>Define los nodos de la red</h2>
+        <p>Ingresa los puntos de origen (plantas, bodegas) y destino (ciudades, clientes) de tu modelo.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="node-panel origins">
+          <div class="node-panel-header">
+            <span class="node-type-icon origin-icon">▲</span>
+            <span class="node-type-label">Orígenes</span>
+            <span class="node-count" id="origins-count">0</span>
+          </div>
+          <div class="tags-area" id="origins-tags"></div>
+          <div class="add-node-row">
+            <input type="text" id="origin-input" class="node-input" placeholder="Ej: Planta Bogotá" />
+            <button class="add-btn" onclick="addNode('origin')" title="Agregar">+</button>
+          </div>
+        </div>
+
+        <div class="node-panel destinations">
+          <div class="node-panel-header">
+            <span class="node-type-icon dest-icon">▼</span>
+            <span class="node-type-label">Destinos</span>
+            <span class="node-count" id="destinations-count">0</span>
+          </div>
+          <div class="tags-area" id="destinations-tags"></div>
+          <div class="add-node-row">
+            <input type="text" id="dest-input" class="node-input" placeholder="Ej: Cliente Medellín" />
+            <button class="add-btn" onclick="addNode('dest')" title="Agregar">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-next" onclick="goStep(2)">Siguiente — Flujos <span class="btn-arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 2: SUPPLY & DEMAND -->
+    <section class="step-section" id="step-2">
+      <div class="section-header">
+        <div class="section-tag">Paso 02</div>
+        <h2>Oferta y demanda</h2>
+        <p>Ingresa las capacidades de cada origen y los requerimientos de cada destino.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="flow-panel">
+          <div class="flow-panel-header origin-header">Capacidad de oferta</div>
+          <div id="supply-inputs"></div>
+        </div>
+        <div class="flow-panel">
+          <div class="flow-panel-header dest-header">Requerimiento de demanda</div>
+          <div id="demand-inputs"></div>
+        </div>
+      </div>
+
+      <div id="balance-indicator" class="balance-indicator hidden"></div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goStep(1)">← Atrás</button>
+        <button class="btn-next" onclick="goStep(3)">Siguiente — Costos <span class="btn-arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 3: COSTS -->
+    <section class="step-section" id="step-3">
+      <div class="section-header">
+        <div class="section-tag">Paso 03</div>
+        <h2>Matriz de costos</h2>
+        <p>Define el costo unitario de transportar desde cada origen hacia cada destino.</p>
+      </div>
+
+      <div class="cost-matrix-wrap" id="cost-matrix-wrap"></div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goStep(2)">← Atrás</button>
+        <button class="btn-next" onclick="goStep(4)">Siguiente — Resolver <span class="btn-arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- STEP 4: SOLVE -->
+    <section class="step-section" id="step-4">
+      <div class="section-header">
+        <div class="section-tag">Paso 04</div>
+        <h2>Método de solución</h2>
+        <p>Elige el algoritmo para resolver el modelo de transporte.</p>
+      </div>
+
+      <div class="methods-grid">
+        <div class="method-card selected" data-method="solver" onclick="selectMethod(this)">
+          <div class="method-badge optimal">Óptimo</div>
+          <div class="method-name">Solver PuLP</div>
+          <div class="method-desc">Programación lineal exacta con CBC. Garantiza la solución mínima global.</div>
+          <div class="method-tag">Recomendado</div>
+        </div>
+        <div class="method-card" data-method="northwest" onclick="selectMethod(this)">
+          <div class="method-badge heuristic">Heurístico</div>
+          <div class="method-name">Esquina Noroeste</div>
+          <div class="method-desc">Asigna desde la celda superior izquierda. Simple y rápido, solución inicial.</div>
+        </div>
+        <div class="method-card" data-method="mincost" onclick="selectMethod(this)">
+          <div class="method-badge heuristic">Heurístico</div>
+          <div class="method-name">Costo Mínimo</div>
+          <div class="method-desc">Greedy: asigna primero a las rutas de menor costo. Mejor que noroeste.</div>
+        </div>
+        <div class="method-card" data-method="vogel" onclick="selectMethod(this)">
+          <div class="method-badge best-heuristic">Mejor inicial</div>
+          <div class="method-name">Aproximación Vogel</div>
+          <div class="method-desc">Usa penalizaciones para elegir la ruta. La mejor solución inicial heurística.</div>
+        </div>
+      </div>
+
+      <div class="nav-row" style="margin-bottom: 2rem;">
+        <button class="btn-back" onclick="goStep(3)">← Atrás</button>
+        <button class="btn-solve" id="solve-btn" onclick="solve()">
+          <span id="solve-label">Resolver modelo</span>
+          <span class="btn-arrow">⬡</span>
+        </button>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results-area" class="results-area hidden">
+        <div class="results-header">
+          <div class="results-title-row">
+            <h3 id="result-method-name">Resultado</h3>
+            <div class="result-cost-badge" id="result-cost-badge">$0</div>
+          </div>
+          <div id="result-explanation" class="result-explanation"></div>
+          <div id="balance-result-info" class="balance-result-info"></div>
+        </div>
+
+        <div class="results-body">
+          <div class="result-block">
+            <div class="result-block-title">Plan de distribución</div>
+            <div class="table-wrap">
+              <table class="result-table" id="routes-table">
+                <thead>
+                  <tr>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Cantidad</th>
+                    <th>Costo unit.</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="routes-tbody"></tbody>
+                <tfoot>
+                  <tr class="total-row">
+                    <td colspan="4">Costo Total Mínimo</td>
+                    <td id="routes-total"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="result-block">
+            <div class="result-block-title">Matriz de asignación</div>
+            <div class="table-wrap" id="matrix-wrap"></div>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-secondary" onclick="goStep(1)">Nuevo modelo</button>
+          <button class="btn-secondary" onclick="goStep(4)">Cambiar método</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
