@@ -347,6 +347,7 @@ function deleteImportCol(colIdx) {
 function resetImportGrid() {
   importRows = 4;
   importCols = 4;
+  document.getElementById('excel-grid').innerHTML = '';
   renderImportGrid();
 }
 

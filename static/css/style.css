@@ -666,13 +666,13 @@ body {
 .node-supply-input {
   width: 110px;
   min-width: 110px;
-  padding: 8px 10px;
+  padding: 10px 14px;
   background: var(--bg-4);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text);
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 15px;
   text-align: right;
 }
 .node-supply-input:focus {
