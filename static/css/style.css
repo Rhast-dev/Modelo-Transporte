@@ -629,3 +629,239 @@ body {
   .main-content { padding: 2rem 1rem; }
   .section-header h2 { font-size: 28px; }
 }
+/* ── NEW FEATURES STYLES ──────────────────────────────────── */
+
+/* Node tags with inline flow */
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  padding: 8px 10px;
+}
+.tag-name { flex-shrink: 0; font-size: 14px; }
+.tag-flow-label {
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+.tag-flow-input {
+  width: 72px;
+  padding: 3px 7px;
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-align: right;
+}
+.tag-flow-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Supply/demand input next to node input — wider so placeholder fits */
+.node-supply-input {
+  width: 110px;
+  min-width: 110px;
+  padding: 8px 10px;
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: right;
+}
+.node-supply-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-3);
+}
+.node-supply-input::placeholder { color: var(--text-3); font-size: 12px; }
+
+.flow-hint {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--mono);
+  padding: 4px 0 0 2px;
+}
+
+/* Also widen the add-node-row so it doesn't wrap */
+.add-node-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.node-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* IMPORT BAR */
+.import-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 1.5rem;
+}
+.btn-import {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--bg-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-import:hover {
+  background: var(--bg-4);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.import-icon { font-size: 16px; }
+.import-hint {
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+
+/* IMPORT PANEL */
+.import-panel {
+  background: var(--bg-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.import-panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  color: var(--text-2);
+  font-family: var(--mono);
+}
+.import-panel-hint {
+  font-size: 11px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+.excel-grid-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.excel-table {
+  border-collapse: collapse;
+  min-width: 400px;
+}
+.excel-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+}
+
+/* Col delete header */
+.col-ctrl-row td { border: none; padding: 0 0 2px 0; text-align: center; }
+.ctrl-corner { min-width: 28px; }
+.col-ctrl { text-align: center; }
+.btn-del-col, .btn-del-row {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  line-height: 1;
+  transition: color 0.12s, background 0.12s;
+}
+.btn-del-col:hover, .btn-del-row:hover {
+  color: var(--danger);
+  background: rgba(245, 90, 90, 0.12);
+}
+.row-ctrl {
+  padding: 0 4px !important;
+  border: none !important;
+  background: transparent;
+  min-width: 28px;
+  text-align: center;
+}
+
+.excel-cell {
+  display: block;
+  width: 100%;
+  min-width: 100px;
+  padding: 7px 10px;
+  background: var(--bg-3);
+  border: none;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: center;
+}
+.excel-cell:focus {
+  outline: none;
+  background: rgba(212, 245, 66, 0.08);
+  color: var(--accent);
+}
+.excel-table tr:nth-child(2) .excel-cell {
+  background: var(--bg-4);
+  font-weight: 500;
+  color: var(--text-2);
+}
+.import-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn-secondary.danger {
+  border-color: rgba(245, 90, 90, 0.3);
+  color: var(--danger);
+}
+.btn-secondary.danger:hover {
+  background: rgba(245, 90, 90, 0.1);
+  border-color: var(--danger);
+}
+
+/* NEW PROBLEM BUTTON */
+.btn-new-problem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn-new-problem:hover {
+  background: var(--accent);
+  color: #0d0e10;
+  transform: translateY(-1px);
+}
+
+/* HIDDEN UTILITY */
+.hidden { display: none !important; }
+
+/* SweetAlert2 custom */
+.swal2-popup { font-family: var(--display) !important; }
