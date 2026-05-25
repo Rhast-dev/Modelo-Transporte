@@ -544,9 +544,68 @@ function renderResults(data) {
   });
   matrix += '</tbody></table>';
   document.getElementById('matrix-wrap').innerHTML = matrix;
+  document.getElementById('comparison-panel').classList.add('hidden');
 
   document.getElementById('results-area').classList.remove('hidden');
   document.getElementById('results-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function showComparisonPanel() {
+  if (state.origins.length === 0 || state.destinations.length === 0) {
+    return swalError('Agrega orígenes y destinos antes de generar la comparación final.');
+  }
+
+  collectCosts();
+  const payload = {
+    origins: state.origins,
+    destinations: state.destinations,
+    supply: state.supply,
+    demand: state.demand,
+    costs: state.costs
+  };
+  const methods = ['solver', 'northwest', 'mincost', 'vogel'];
+  const methodNames = {
+    solver: 'Solver PuLP — Óptimo',
+    northwest: 'Esquina Noroeste',
+    mincost: 'Costo Mínimo',
+    vogel: 'Aproximación Vogel'
+  };
+
+  try {
+    const results = await Promise.all(methods.map(async method => {
+      const resp = await fetch('/solve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, method })
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) {
+        throw new Error(data.error || `Error al resolver ${methodNames[method]}`);
+      }
+      return { method, data };
+    }));
+
+    const rows = results.map(({ method, data }) => {
+      const activeRoutes = data.routes.length;
+      return `<tr>
+        <td>${methodNames[method]}</td>
+        <td>${formatNum(data.total)}</td>
+        <td>${data.status || 'N/A'}</td>
+        <td>${activeRoutes}</td>
+        <td>${data.method_note || data.explanation || ''}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('comparison-tbody').innerHTML = rows;
+    document.getElementById('comparison-panel').classList.remove('hidden');
+    document.getElementById('comparison-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    swalError(e.message);
+  }
+}
+
+function closeComparisonPanel() {
+  document.getElementById('comparison-panel').classList.add('hidden');
 }
 
 function renderError(msg) {
@@ -557,6 +616,7 @@ function renderError(msg) {
   document.getElementById('routes-tbody').innerHTML = '';
   document.getElementById('routes-total').textContent = '—';
   document.getElementById('matrix-wrap').innerHTML = '';
+  document.getElementById('comparison-panel').classList.add('hidden');
   document.getElementById('results-area').classList.remove('hidden');
 }
 

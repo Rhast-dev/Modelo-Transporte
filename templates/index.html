@@ -217,9 +217,37 @@
 
         <div class="result-actions">
           <button class="btn-secondary" onclick="goStep(3)">Cambiar método</button>
-          <button class="btn-new-problem" onclick="newProblem()">
-            <span>⟳</span> Nuevo problema
-          </button>
+          <button class="btn-secondary" onclick="showComparisonPanel()">Comparación final</button>
+        </div>
+
+        <div id="comparison-panel" class="comparison-panel hidden">
+          <div class="comparison-panel-header">
+            <div>
+              <div class="section-tag">Comparación final</div>
+              <h3>Resultados de cada método</h3>
+              <p class="comparison-note">Se muestran costos totales, estado y número de rutas generadas por cada algoritmo.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="comparison-table" id="comparison-table">
+              <thead>
+                <tr>
+                  <th>Método</th>
+                  <th>Costo total</th>
+                  <th>Estado</th>
+                  <th>Rutas activas</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-tbody"></tbody>
+            </table>
+          </div>
+          <div class="result-actions" style="margin-top: 1.25rem;">
+            <button class="btn-secondary" onclick="closeComparisonPanel()">Cerrar comparación</button>
+            <button class="btn-new-problem" onclick="newProblem()">
+              <span>⟳</span> Nuevo problema
+            </button>
+          </div>
         </div>
       </div>
     </section>
